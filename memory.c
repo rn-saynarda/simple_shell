@@ -1,18 +1,47 @@
-#include "shell.h"
+#include "memory.h"
 
 /**
- * bfree - frees a pointer and NULLs the address
- * @ptr: address of the pointer to free
+ * _realloc - Reallocates a memory block using malloc and free
  *
- * Return: 1 if freed, otherwise 0.
- */
-int bfree(void **ptr)
+ * @ptr: Pointer to the memory previously allocated
+ * @old_size: Size, in bytes, of the allocated space for ptr
+ * @new_size: New size, in bytes of the new memory block
+ *
+ * Return: Memory reallocated
+ **/
+void *_realloc(void *ptr, size_t old_size, size_t new_size)
 {
-	if (ptr && *ptr)
+	char *s, *aux;
+	unsigned int a;
+
+	if (new_size == old_size)
+		return (ptr);
+
+	if (ptr == NULL)
 	{
-		free(*ptr);
-		*ptr = NULL;
-		return (1);
+		s = malloc(new_size);
+		if (s == NULL)
+			return (NULL);
+
+		return (s);
 	}
-	return (0);
+
+	if (new_size == 0 && ptr != NULL)
+	{
+		free(ptr);
+		return (NULL);
+	}
+
+	s = malloc(new_size);
+	if (s == NULL)
+		return (NULL);
+
+	aux = ptr;
+	for (a = 0; a < old_size; a++)
+		s[a] = aux[a];
+
+	free(ptr);
+
+	return (s);
 }
+
